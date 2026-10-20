@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from django.urls import reverse_lazy
+import dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -124,8 +125,8 @@ MEDIA_ROOT = [BASE_DIR/'media']
 LOGIN_REDIRECT_URL = reverse_lazy('main')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""
+EMAIL_HOST_USER = dotenv.get_key(BASE_DIR / ".env", "EMAIL")
+EMAIL_HOST_PASSWORD = dotenv.get_key(BASE_DIR / ".env", "PASSWORD")
 
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

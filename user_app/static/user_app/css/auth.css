@@ -1,0 +1,28 @@
+form{
+    display: none;
+}
+
+.opened-form{
+    display: flex;
+    flex-direction: column;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+#backToRegister, #openRegister, #openLogin{
+    cursor: pointer;
+    color: gray;
+}
+
+#backToRegister:hover, #openRegister:hover, #openLogin:hover{
+    color: rgb(74, 73, 73);
+}
+
+.active{
+    text-decoration: underline;
+    color: black;
+}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <main>
+        {% include "user_app/forms/register.html" %}
+        {% include "user_app/forms/login.html" %}
+        {% include "user_app/forms/verificate.html" %}
+    </main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'user_app/js/auth.js' %}"></script>
+{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'user_app/css/auth.css' %}">
+{% endblock %}
+
+{# 
+
+{% include "шлях.html" %} - додає код з вказаного html файлу 
+( в ньом не потрібні блоки та базовий шаблон лише html)
+
+#}

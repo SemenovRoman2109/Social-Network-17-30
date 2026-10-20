@@ -1,5 +1,5 @@
 from django.shortcuts import render , redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic import *
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
@@ -26,7 +26,7 @@ class RegistrationView(CreateView):
             subject="Verify code", 
             message=f"Your code: {verify_code.code}",
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=["worldit_academy@worldit.academy"],
+            recipient_list=["rsemenov2109@gmail.com"],
             fail_silently=True
         )
         
@@ -55,7 +55,20 @@ class ConfirmCodeView(FormView):
         else:
             form.add_error("code", "Такого коду не існує, або його час вичерапно.")
             return self.form_invalid(form)
-    
+
+class AuthView(TemplateView):
+    template_name = "user_app/auth.html"
+
+    def get_context_data(self, **kwargs):
+        context = {
+            "register_form": UserCreationForm(),
+            "login_form": AuthenticationForm(),
+            "verify_code_form": VerifyCodeForm()
+        }
+        return context
+        
+
+
 # Під час валідації форми у views щоб додати помилку:
 # form.add_error("поле", "текст")
 # Та щоб повернути форму з помилкою -> return self.form_invalid(form)

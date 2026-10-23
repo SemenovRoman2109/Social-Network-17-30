@@ -7,6 +7,7 @@ from .models import VerifyCode
 from django.conf import settings
 from django.core.mail import send_mail
 from .forms import VerifyCodeForm
+from django.http import JsonResponse
 # Create your views here.
 
 class RegistrationView(CreateView):
@@ -30,8 +31,14 @@ class RegistrationView(CreateView):
             fail_silently=True
         )
         
-        return redirect(self.success_url)
-
+        return JsonResponse({"success": True})
+    
+    def form_invalid(self, form):
+        return JsonResponse({"success": False, "errors": form.errors})
+    
+        # return JsonResponse({"success": True}) - на сервері повертає відповідь для js
+        # імпортувати з django.http
+    
 class CustomLoginView(LoginView):
     template_name = "user_app/login.html"
     

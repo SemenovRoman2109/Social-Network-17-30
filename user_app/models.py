@@ -1,8 +1,67 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils import timezone
 import random
 # Create your models here
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("Обов'язково вкажіть email")
+
+        email = self.normalize_email(email)
+
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
+
+        if not extra_fields.get("is_staff"):
+            raise ValueError("Superuser must have is_staff=True.")
+        if not extra_fields.get("is_superuser"):
+            raise ValueError("Superuser must have is_superuser=True.")
+
+        return self.create_user(email, password, **extra_fields)
+
+# Для того, щоб в стандартній моделі користувача після зміни полей правильно працювало створення потрібно перестворити клас UserManager
+# class UserManager(BaseUserManager):
+# В ньому прописана логіка всих методів роботи з об'єктом (all, get, filter, create)
+
+# Щоб користувач замість username використовув email, в класі UserManager потрібно перезаписати методи create_user та create_superuser видаливши з них username
+
+# Щоб використати UserManager в моделі користувача -> objects = UserManager()
+    
+class User(AbstractUser):
+    username = models.CharField(
+        max_length=150,
+        unique=True,
+        null=True,
+        blank=True,
+    )
+    email = models.EmailField(
+        unique= True
+    )
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = UserManager()
+
+    def __str__(self):
+        return f'<User: {self.email}>'
+
+# Щоб змінити стандартну модель користувача потріно створити власну:
+# class User(AbstractUser):
+# в ній константа USERNAME_FIELD - вказує, що буде використано для авторизації
+# а REQUIRED_FIELDS = [] - вказує, що додаткових обов'язкових полей немає
+
+# Щоб зробити поле моделі необов'язковим -> (null=True, blank=True)
+
+# AUTH_USER_MODEL = "user_app.User" - в settings.py вказує основну модель користувача 
 
 class VerifyCode(models.Model):
     code = models.CharField(max_length=20)

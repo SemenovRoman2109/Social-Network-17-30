@@ -6,12 +6,12 @@ from django.contrib.auth.views import LoginView, LogoutView
 from .models import VerifyCode
 from django.conf import settings
 from django.core.mail import send_mail
-from .forms import VerifyCodeForm
+from .forms import *
 from django.http import JsonResponse
 # Create your views here.
 
 class RegistrationView(CreateView):
-    form_class = UserCreationForm
+    form_class = RegisterForm
     template_name = "user_app/register.html"
     success_url = reverse_lazy("confirm_code")
     
@@ -22,12 +22,12 @@ class RegistrationView(CreateView):
         
         verify_code = VerifyCode.objects.create(code = 0, user = user)
         verify_code.generate_code()
-        
+        print(user.email)
         send_mail(
             subject="Verify code", 
             message=f"Your code: {verify_code.code}",
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=["rsemenov2109@gmail.com"],
+            recipient_list=[user.email],
             fail_silently=True
         )
         
@@ -68,7 +68,7 @@ class AuthView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = {
-            "register_form": UserCreationForm(),
+            "register_form": RegisterForm(),
             "login_form": AuthenticationForm(),
             "verify_code_form": VerifyCodeForm()
         }

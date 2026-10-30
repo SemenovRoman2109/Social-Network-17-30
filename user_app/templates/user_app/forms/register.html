@@ -1,6 +1,6 @@
 {% load static %}
 
-<form action="{% url 'register' %}" method="post" id="registerForm" class="opened-form">
+<form action="{% url 'register' %}" method="post" id="registerForm" class="{% if current_form == 'register' %}opened-form{%endif%}">
     <div class = "row">
         <h1 class = "active">Реєстрація</h1>
         <h1 id = "openLogin">Авторизація</h1>

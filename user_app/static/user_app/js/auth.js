@@ -21,41 +21,51 @@ backToRegister.addEventListener('click',() => {
     registerForm.classList.add('opened-form')
 })
 
-// В Js подія submit - коли відправляють форму
-// форма.addEventListener('submit', функція)
+let isSending = false
+function sendingForm(form, resultFunc){
+    form.addEventListener('submit', async function (event){
+        event.preventDefault()
+        if(isSending == false){
+            isSending = true 
+            const response = await fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": form.querySelector("input[name='csrfmiddlewaretoken']").value
+                },
+                body: new FormData(form)
+            })
+            const data = await response.json()
+            resultFunc(data)
+            isSending = false
+        }
+    } )
+}
 
-// В функції події - (event)=>{}
-// Параметр event зберігає всю інформацію про подію
-// event.preventDefault() - зупиняю стандартні події браузера (відправка форми, скролл та ін)
-
-registerForm.addEventListener('submit', async function (event){
-    event.preventDefault()
-    const response = await fetch(registerForm.action, {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": registerForm.querySelector("input[name='csrfmiddlewaretoken']").value
-        },
-        body: new FormData(registerForm)   
-    })
-    const data = await response.json()
+sendingForm(registerForm, (data)=>{
     if (data.success){
         verificateForm.classList.add('opened-form')
         registerForm.classList.remove('opened-form')
+        verificateForm.querySelector("b").textContent = `(${data.email})`
+
     }else{
         console.log(data.errors);
     }
-} )
+})
+sendingForm(loginForm, (data)=>{
+    if (data.success){
+        window.location.href = '/main'
+    }else {
+        console.log(data.errors)
+    }
+}) 
+sendingForm(verificateForm, (data)=>{
+    if (data.success){
+        verificateForm.classList.remove('opened-form')
+        loginForm.classList.add('opened-form')
+    }else {
+        console.log(data.errors)
+    }
+}) 
 
-// Щоб відправити POST запит в async функції:
 
-// const response = await fetch(форма.action, {
-//        method: "POST", - вказує вид запиту
-//        headers: {
-//            "X-CSRFToken": csrfToken
-//        },
-//        body: new FormData(форма) - отримує всі дані з форми
-//    })
 
-// Щоб отримати csrfToken - форма.querySelector("input[name='csrfmiddlewaretoken']").value
-
-// const data = await response.json() - отримує дані з відповіді сервера

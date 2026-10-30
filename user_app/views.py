@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic import *
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import login
 from .models import VerifyCode
 from django.conf import settings
 from django.core.mail import send_mail
@@ -12,8 +13,6 @@ from django.http import JsonResponse
 
 class RegistrationView(CreateView):
     form_class = RegisterForm
-    template_name = "user_app/register.html"
-    success_url = reverse_lazy("confirm_code")
     
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -30,8 +29,9 @@ class RegistrationView(CreateView):
             recipient_list=[user.email],
             fail_silently=True
         )
+        self.request.session["email"] = user.email
         
-        return JsonResponse({"success": True})
+        return JsonResponse({"success": True, "email": user.email})
     
     def form_invalid(self, form):
         return JsonResponse({"success": False, "errors": form.errors})
@@ -40,37 +40,63 @@ class RegistrationView(CreateView):
         # імпортувати з django.http
     
 class CustomLoginView(LoginView):
-    template_name = "user_app/login.html"
+    form_class = LoginForm
+    def form_valid(self, form):
+        user = form.get_user()
+        
+        if not user.is_active:
+            form.add_error("general", "Користувач не активний, пiдтвердiть пошту")
+            return self.form_invalid(form)
+        login(request = self.request, user=user)
+        return JsonResponse({"success": True})
+    
+    def form_invalid(self, form):
+        return JsonResponse({"success": False, "errors": form.errors})
     
 class MainView(TemplateView):
     template_name = "user_app/main.html"
     
-class ConfirmCodeView(FormView):
-    template_name = "user_app/verificate.html"
+class VerifyCodeView(FormView):
     form_class = VerifyCodeForm
-    success_url = reverse_lazy("login")
 
     def form_valid(self, form: VerifyCodeForm):
         code = form.cleaned_data.get("code")
         verify_code = VerifyCode.objects.filter(code = code).first()
-        print(code, verify_code)
         
         if verify_code and verify_code.is_valid():
             verify_code.user.is_active = True
             verify_code.user.save()
-            return redirect(self.success_url)
+            self.request.session.pop("email")
+            verify_code.delete()
+            return JsonResponse({"success": True})
         else:
             form.add_error("code", "Такого коду не існує, або його час вичерапно.")
             return self.form_invalid(form)
+        
+    def form_invalid(self, form):
+        return JsonResponse({"success": False, "errors": form.errors})
 
 class AuthView(TemplateView):
     template_name = "user_app/auth.html"
 
     def get_context_data(self, **kwargs):
+        email= self.request.session.get('email')
+        current_form = 'register'
+        if email:
+            user = User.objects.filter(email = email).first()
+            if user and not user.is_active:
+                current_form = 'verify_code'
+            else:
+                self.request.session.pop("email")
+        # В django для збереження даних у користувача використовується сесія (авторизація не обов'язкова) 
+        # self.request.session - словник сесії (.get - щоб отримати .pop - щоб видалити)
+        
         context = {
             "register_form": RegisterForm(),
-            "login_form": AuthenticationForm(),
-            "verify_code_form": VerifyCodeForm()
+            "login_form": LoginForm(),
+            "verify_code_form": VerifyCodeForm(),
+            "current_form": current_form,
+            "email": email
         }
         return context
         

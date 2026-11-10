@@ -8,4 +8,5 @@ urlpatterns = [
     path('main/', MainView.as_view(), name = 'main'),
     path('verify_code/', VerifyCodeView.as_view(), name = 'verify_code'),
     path('', AuthView.as_view(), name = 'auth'),
+    path('first_entry/', FirstEntryView.as_view(), name = 'first_entry'),
 ]

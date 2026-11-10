@@ -1,0 +1,17 @@
+{% load static %}
+
+{% if user.is_authenticated and not user.username %}
+    <div class = "modal-bg" id="firstEntryModalBG">
+        <form id="detailUserModel" action = "{% url 'first_entry' %}" method = "post">
+            {% csrf_token %}
+            <h2>Додай деталі про себе</h2>
+            <p>Псевдонім автора</p>
+            <input type="text" name="pseudonym" placeholder="Введіть Псевдонім автора">
+            <p>Ім’я користувача</p>
+            <input type="text" name="username" placeholder="Введіть Ім’я користувача" required>
+            <button type="submit">Продовжити</button>
+        </form>    
+    </div>
+    <script src="{% static 'js/first_entry.js' %}"></script>
+{% endif %}
+

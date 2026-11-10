@@ -1,0 +1,17 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% block links %}{% endblock %}
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+
+    <script src="{% static 'js/form.js' %}"></script>
+    {% block scripts%}
+    {% endblock %}
+</body>
+</html>

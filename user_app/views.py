@@ -1,8 +1,6 @@
-from django.shortcuts import render , redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic import *
-from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
 from .models import VerifyCode
 from django.conf import settings
@@ -53,7 +51,7 @@ class CustomLoginView(LoginView):
     def form_invalid(self, form):
         return JsonResponse({"success": False, "errors": form.errors})
     
-class MainView(TemplateView):
+class MainView(LoginRequiredMixin, TemplateView):
     template_name = "user_app/main.html"
     
 class VerifyCodeView(FormView):
@@ -100,8 +98,19 @@ class AuthView(TemplateView):
         }
         return context
         
-
-
-# Під час валідації форми у views щоб додати помилку:
-# form.add_error("поле", "текст")
-# Та щоб повернути форму з помилкою -> return self.form_invalid(form)
+class FirstEntryView(LoginRequiredMixin, FormView):
+    form_class = FirstEntryForm
+    
+    def form_valid(self, form: FirstEntryForm):
+        user : User = self.request.user
+        user.username = form.cleaned_data.get("username")
+        user.pseudonym = form.cleaned_data.get("pseudonym")
+        user.save()
+        return JsonResponse({"success": True})
+    
+    def form_invalid(self, form):
+        return JsonResponse({"success": False, "errors": form.errors})
+    
+# Щоб на сторінку могли увійти тільки авторизовані користувачі -> успадкувати LoginRequiredMixin
+# В settings.py потрібно вказати посилання на сторінку login -> LOGIN_URL 
+# from django.contrib.auth.mixins import LoginRequiredMixin

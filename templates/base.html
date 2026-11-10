@@ -1,15 +1,25 @@
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}"> 
     {% block links %}{% endblock %}
 </head>
 <body>
-    <nav>
-    </nav>
+    <header>
+        <form action="{% url 'logout' %}" method = "post" id = "buttonLogout">
+            {% csrf_token%}
+            <button>Вихід</button>
+        </form>
+    </header>
     {% block content %}
     {% endblock %}
+
+    <script src="{% static 'js/form.js' %}"></script>
+    {% include "first_entry.html" %}
+    
     {% block scripts%}
     {% endblock %}
 </body>

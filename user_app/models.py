@@ -27,18 +27,16 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self.create_user(email, password, **extra_fields)
-
-# Для того, щоб в стандартній моделі користувача після зміни полей правильно працювало створення потрібно перестворити клас UserManager
-# class UserManager(BaseUserManager):
-# В ньому прописана логіка всих методів роботи з об'єктом (all, get, filter, create)
-
-# Щоб користувач замість username використовув email, в класі UserManager потрібно перезаписати методи create_user та create_superuser видаливши з них username
-
-# Щоб використати UserManager в моделі користувача -> objects = UserManager()
     
 class User(AbstractUser):
     username = models.CharField(
         max_length=150,
+        unique=True,
+        null=True,
+        blank=True,
+    )
+    pseudonym = models.CharField(
+        max_length=30,
         unique=True,
         null=True,
         blank=True,
@@ -53,15 +51,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return f'<User: {self.email}>'
-
-# Щоб змінити стандартну модель користувача потріно створити власну:
-# class User(AbstractUser):
-# в ній константа USERNAME_FIELD - вказує, що буде використано для авторизації
-# а REQUIRED_FIELDS = [] - вказує, що додаткових обов'язкових полей немає
-
-# Щоб зробити поле моделі необов'язковим -> (null=True, blank=True)
-
-# AUTH_USER_MODEL = "user_app.User" - в settings.py вказує основну модель користувача 
 
 class VerifyCode(models.Model):
     code = models.CharField(max_length=20)

@@ -123,7 +123,9 @@ STATICFILES_DIRS = [BASE_DIR/'static']
 MEDIA_ROOT = [BASE_DIR/'media']
 
 LOGIN_REDIRECT_URL = reverse_lazy('main')
-LOGOUT_REDIRECT_URL = reverse_lazy('login')
+LOGOUT_REDIRECT_URL = reverse_lazy('auth')
+
+LOGIN_URL = reverse_lazy('auth')
 
 EMAIL_HOST_USER = dotenv.get_key(BASE_DIR / ".env", "EMAIL")
 EMAIL_HOST_PASSWORD = dotenv.get_key(BASE_DIR / ".env", "PASSWORD")

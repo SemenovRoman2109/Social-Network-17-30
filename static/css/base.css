@@ -1,0 +1,21 @@
+.modal-bg{
+    position: absolute;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    background-color: #00000081;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#detailUserModel{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    background-color: white;
+    border-radius: 12px;
+}

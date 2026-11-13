@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_app'
+    'user_app',
+    'post_app'
 ]
 
 MIDDLEWARE = [
@@ -121,6 +122,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR/'static']
 
 MEDIA_ROOT = [BASE_DIR/'media']
+MEDIA_URL = 'media/'
+
 
 LOGIN_REDIRECT_URL = reverse_lazy('main')
 LOGOUT_REDIRECT_URL = reverse_lazy('auth')

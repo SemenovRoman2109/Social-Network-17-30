@@ -11,6 +11,7 @@ from django.http import JsonResponse
 
 class RegistrationView(CreateView):
     form_class = RegisterForm
+    http_method_names = ["post"]
     
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -39,6 +40,8 @@ class RegistrationView(CreateView):
     
 class CustomLoginView(LoginView):
     form_class = LoginForm
+    http_method_names = ["post"]
+    
     def form_valid(self, form):
         user = form.get_user()
         
@@ -56,6 +59,7 @@ class MainView(LoginRequiredMixin, TemplateView):
     
 class VerifyCodeView(FormView):
     form_class = VerifyCodeForm
+    http_method_names = ["post"]
 
     def form_valid(self, form: VerifyCodeForm):
         code = form.cleaned_data.get("code")
@@ -100,6 +104,7 @@ class AuthView(TemplateView):
         
 class FirstEntryView(LoginRequiredMixin, FormView):
     form_class = FirstEntryForm
+    http_method_names = ["post"]
     
     def form_valid(self, form: FirstEntryForm):
         user : User = self.request.user

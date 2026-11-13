@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>Posts</h1>
+    <button id = 'createPostButton'>Create post</button>
+    
+    {% include 'post_app/create_post.html' %}
+{% endblock%}

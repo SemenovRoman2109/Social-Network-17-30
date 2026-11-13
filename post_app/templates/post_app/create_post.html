@@ -1,0 +1,23 @@
+{% static %}
+
+<div class = "modal-bg" id="createPostBG">
+    <form id="createPostForm" action = "{% url 'create_post' %}" method = "post">
+        {% csrf_token %}
+        <input type="text" name = "title" placeholder = 'Введіть заголовок' required>
+        <input type="text" name = "topic" placeholder = 'Введіть ' required>
+        <div class="tags-container">
+            {% for tag in tags %}
+                <div>
+                    <input type="checkbox" style = 'display: none' value = "{{tag.id}}" name="tags">
+                    <p>{{ tag.name }}</p>
+                </div>
+            {% endfor %}    
+            <button id = 'add_tag'>+</button>    
+        </div>
+        
+        
+        <button type="submit" id = "createPostButton1">Створити</button>
+    </form>    
+</div>
+
+<script src="{% static 'post_app/js/create_post.js' %}"></script>

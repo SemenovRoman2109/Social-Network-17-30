@@ -1,22 +1,37 @@
-{% static %}
+{% load static %}
 
-<div class = "modal-bg" id="createPostBG">
-    <form id="createPostForm" action = "{% url 'create_post' %}" method = "post">
+<div class = "modal-bg hidden" id="createPostBG">
+    <form id="createPostForm" action = "{% url 'create_post' %}" method = "post" enctype="multipart/form-data">
         {% csrf_token %}
+        <button type="button" id = "closeCreatePostForm">x</button>
         <input type="text" name = "title" placeholder = 'Введіть заголовок' required>
-        <input type="text" name = "topic" placeholder = 'Введіть ' required>
+        <input type="text" name = "topic" placeholder = 'Введіть тему' required>
         <div class="tags-container">
             {% for tag in tags %}
-                <div>
-                    <input type="checkbox" style = 'display: none' value = "{{tag.id}}" name="tags">
+                <div class = "tag-element">
+                    <input type="checkbox" class="hidden" value = "{{tag.id}}" name="tags">
                     <p>{{ tag.name }}</p>
                 </div>
             {% endfor %}    
-            <button id = 'add_tag'>+</button>    
+            <div id="newTagContainer" class="hidden">
+                <input type="text" id="newTagInput">
+                <button type="button" id="acceptTag">Підтвердити</button>
+            </div>
+            <button type="button" id = 'addTag'>+</button>    
         </div>
+        <textarea name="description" placeholder="Введіть опис"></textarea>
+        <div class='links-container'>
+            <p>посилання</p>
+            <input type='url' name='links' placeholder='Введіть посилання'>
+            <button type="button" id="addLink">+</button>
+            <button type="button" class='hidden' id="removeLink">x</button>
+        </div>
+        <div class="image-container"></div>
         
-        
+        <input type='file' name="images" id="ImageInput" class="hidden" multiple accept="images/*">
+        <button type="button" id = "addImage">Додати зображення</button>
         <button type="submit" id = "createPostButton1">Створити</button>
+        
     </form>    
 </div>
 

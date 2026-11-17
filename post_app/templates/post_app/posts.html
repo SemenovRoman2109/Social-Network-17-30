@@ -6,4 +6,12 @@
     <button id = 'createPostButton'>Create post</button>
     
     {% include 'post_app/create_post.html' %}
-{% endblock%}
+{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'post_app/css/post.css' %}">
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'post_app/js/create_post.js'%}"></script>
+{% endblock %}

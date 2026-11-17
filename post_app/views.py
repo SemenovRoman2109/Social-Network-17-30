@@ -5,13 +5,15 @@ from .forms import PostForm
 from django.http import JsonResponse
 from .models import Tag
 
+
+
 # Create your views here.
 class PostView(LoginRequiredMixin,TemplateView):
     template_name = 'post_app/posts.html'
     
     def get_context_data(self):
         return {
-            "tags": Tag.objects.all()
+            "tags": Tag.objects.all()[:10]
         }
         
 

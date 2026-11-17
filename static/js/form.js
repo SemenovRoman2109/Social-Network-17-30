@@ -1,4 +1,6 @@
 let isSending = false
+console.log(123);
+
 function sendingForm(form, resultFunc){
     form.addEventListener('submit', async function (event){
         event.preventDefault()

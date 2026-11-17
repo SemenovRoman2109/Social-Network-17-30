@@ -1,0 +1,14 @@
+.hidden{
+    display: none;
+}
+
+.tag-element{
+    background-color: rgb(208, 203, 203);
+    border: 2px solid black;
+    border-radius: 5px;
+
+}
+
+.active-tag{
+    background-color: #543C52;
+}

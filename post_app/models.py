@@ -3,7 +3,7 @@ from user_app.models import User
 
 # Create your models here.
 class Tag(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=30)
     def __str__(self):
         return f'<Tag: #{self.name}>'
 

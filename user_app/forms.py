@@ -5,7 +5,7 @@ from .models import User
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(
         label="Електронна пошта",
-        widget=forms.EmailInput(attrs={"placeholder": "you@example.com"})
+        widget=forms.EmailInput(attrs={"placeholder": "you@example.com"}),
     )
     password1, password2 = SetPasswordMixin.create_password_fields("Пароль", "Підтверди пароль")
 

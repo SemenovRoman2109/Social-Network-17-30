@@ -21,6 +21,11 @@ class CreatePostView(LoginRequiredMixin, CreateView):
     forms_class = PostForm
     http_method_names = ["post"]
     
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['author'] = self.request.user
+        return kwargs
+    
     def form_valid(self, form: PostForm):
         ...
         return JsonResponse({"success": True})
@@ -30,3 +35,11 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 
 # http_method_names = ["post"] - 
 # в класі відображення вказує які види запитів приймає сторінка
+
+# Щоб в форму передати параметри з views (наприклад користувача):
+# У views метод -> 
+#     def get_form_kwargs(self):
+#         kwargs = super().get_form_kwargs()
+#         Змінення kwargs
+#         return kwargs
+# у формі їх потрібно отримати -> створити метод __init__ з потрібним параметром

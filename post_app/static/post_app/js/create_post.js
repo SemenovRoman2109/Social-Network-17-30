@@ -45,6 +45,10 @@ acceptTag.addEventListener("click", ()=>{
             <input type="checkbox" class="hidden" value = "${newTagInput.value.trim()}"  name="new_tags" checked>
             <p>${newTagInput.value.trim()}</p>
         `
+        newTag.addEventListener('click', ( ) =>{
+            newTag.classList.toggle("active-tag")
+            newTag.querySelector("input").checked = ! newTag.querySelector("input").checked
+        })
         document.querySelector(".tags-container").insertBefore(newTag, newTagContainer)
         newTagInput.value = ''
     }
